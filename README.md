@@ -25,13 +25,36 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+### Game Purpose
+This is a number guessing game built with Streamlit. The player selects a difficulty level and tries to guess a secret number within a limited number of attempts. After each guess, the game gives a hint ("Go HIGHER" or "Go LOWER") and tracks a score that decreases with wrong guesses.
+
+### Bugs Found
+1. **Backwards hints** — "Too High" told the player to go higher instead of lower, and vice versa.
+2. **Wrong difficulty ranges** — Hard mode used range 1–50, which was easier than Normal's 1–100.
+3. **Score rewarded wrong guesses** — Even-numbered "Too High" attempts incorrectly added 5 points.
+4. **Secret cast to string on even attempts** — The secret was converted to a string every other attempt, causing incorrect comparisons.
+5. **Secret exposed in debug expander** — `st.write("Secret:")` showed the answer to the player at all times.
+6. **New Game reset attempts to 0** — Should have reset to 1 to match the initial game state.
+7. **`logic_utils.py` was all stubs** — Every function raised `NotImplementedError`, making tests crash.
+8. **Tests compared string vs tuple** — `check_guess` returns a tuple but tests compared against a plain string.
+9. **Info banner hardcoded range** — Always said "1 to 100" regardless of difficulty.
+10. **New Game ignored difficulty range** — Always generated a secret from 1–100 instead of using `low`/`high`.
+
+### Fixes Applied
+- Corrected hint messages in `check_guess` so "Too High" > "Go LOWER" and "Too Low" > "Go HIGHER".
+- Fixed difficulty ranges so Hard (1–100) is harder than Normal (1–50) and Easy (1–20).
+- Removed the even-attempt score bonus; wrong guesses now always deduct 5 points.
+- Removed the even/odd branch that cast the secret to a string; secret is always kept as an int.
+- Removed `st.write("Secret:")` from the debug expander so the answer stays hidden.
+- Reset attempts to 1 (not 0) on New Game to match the initial state.
+- Moved all game logic functions from `app.py` into `logic_utils.py` and imported them.
+- Fixed tests to use `[0]` to extract the outcome string from the returned tuple.
+- Updated the info banner to use `{low}` and `{high}` variables instead of hardcoded values.
+- Updated New Game to use `random.randint(low, high)` to respect the selected difficulty.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+![Game screenshot](images/screenshot.png)
 
 ## 🚀 Stretch Features
 
