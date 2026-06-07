@@ -9,6 +9,7 @@ venv/
 env/
 ENV/
 .conda/
+codepath/
 *.egg-info/
 .eggs/
 pip-wheel-metadata/

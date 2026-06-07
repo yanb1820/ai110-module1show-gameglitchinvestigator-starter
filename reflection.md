@@ -9,11 +9,26 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 The game had a title, a difficulty selector, and a text input for guessing. It looked mostly complete at first glance, but as soon as I started playing, things felt wrong. The hints were sending me in the wrong direction, and even when I guessed the correct number I couldn't win consistently.
 
 - List at least two concrete bugs you noticed at the start
-  (for example: "the secret number kept changing" or "the hints were backwards").
+  (for example: "the hints were backwards").
 
   - The hints were backwards, when my guess was too high, the game told me to go even higher.
   - The Hard difficulty was actually easier than Normal because it used a smaller number range (1–50 vs 1–100).
   - The debug expander always showed the secret number, making it impossible to play fairly.
+  - On even-numbered attempts the secret got cast to a string, so correct guesses didn't register.
+
+**Bug Reproduction Log**
+
+Document at least 3 bugs you found. Add rows as needed.
+
+| Input | Expected Behavior | Actual Behavior | Console Output / Error |
+|-------|-------------------|-----------------|------------------------|
+| Guess 80 when secret is 40 | Hint says "Go LOWER" | Hint says "📈 Go HIGHER!" sending me the wrong way | No error; wrong message returned by `check_guess` |
+| Select "Hard" difficulty | Range wider than Normal (1–100) | Range is only 1–50, easier than Normal | No error; `get_range` returns `(1, 50)` |
+| Guess the correct number on an even attempt | Game says "🎉 Correct!" and I win | Game says too high/low and I can't win | No error; `"40" == 40` is `False` (string vs int comparison) |
+| Open "Developer Debug Info" expander | Should be hidden or gated during normal play | Secret number is always shown in plain view | No error; `st.write("Secret:", ...)` always runs |
+| Click "New Game" on Hard | New secret picked from 1–50 | Secret always picked from 1–100, ignoring difficulty | No error; `random.randint(1, 100)` hardcoded |
+
+**Hint for the next student:** Don't try to fix everything by reading the code top to bottom. Instead, play the game first and write down exactly what you did, what you expected, and what actually happened (like the table above). 
 
 ---
 
@@ -52,17 +67,9 @@ Yes, Claude explained that the tests were failing because `check_guess` returns 
 
 ## 4. What did you learn about Streamlit and state?
 
-- In your own words, explain why the secret number kept changing in the original app.
-
-The secret number itself wasn't regenerating — it was already stored in `st.session_state`. The real bug was that on every even-numbered attempt, the code cast the secret to a string (`str(st.session_state.secret)`), so the game was comparing an integer guess against a string secret. This made results unpredictable without the number actually changing.
-
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
 
 Think of Streamlit like a whiteboard that gets erased and redrawn every time you interact with it. Session state is like a sticky note on the side that survives each erase — whatever you write there stays around between reruns. Without it, everything resets on every click.
-
-- What change did you make that finally gave the game a stable secret number?
-
-The fix was removing the even/odd branch that cast the secret to a string, and always using `secret = st.session_state.secret` directly. This ensured the comparison in `check_guess` was always integer vs integer.
 
 ---
 

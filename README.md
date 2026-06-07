@@ -52,9 +52,18 @@ This is a number guessing game built with Streamlit. The player selects a diffic
 - Updated the info banner to use `{low}` and `{high}` variables instead of hardcoded values.
 - Updated New Game to use `random.randint(low, high)` to respect the selected difficulty.
 
-## 📸 Demo
+## Demo Walkthrough
 
-![Game screenshot](images/screenshot.png)
+<!-- ![Game screenshot](images/screenshot.png) -->
+
+A demo on **Normal** difficulty (range 1–100, secret is 63):
+
+1. User selects "Normal" difficulty and starts a new game.
+2. User enters a guess of `40`, game returns "📈 Go HIGHER!" 
+3. User enters a guess of `80`, game returns "📉 Go LOWER!" 
+4. Score decreases by 5 after each wrong guess, and the attempt counter goes up by 1.
+5. User enters a guess of `63`, game returns "🎉 Correct!" and the win is recorded.
+6. Game ends after the correct guess; the final score and attempt count are displayed.
 
 ## 🚀 Stretch Features
 
