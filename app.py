@@ -27,20 +27,18 @@ low, high = get_range_for_difficulty(difficulty)
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
+defaults = {
+    "attempts": 1,
+    "score": 0,
+    "status": "playing",
+    "history": [],
+}
+for key, value in defaults.items():
+    st.session_state.setdefault(key, value)
+
+# Keep secret separate so random.randint only runs once, not on every rerun.
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
-
-if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
-
-if "score" not in st.session_state:
-    st.session_state.score = 0
-
-if "status" not in st.session_state:
-    st.session_state.status = "playing"
-
-if "history" not in st.session_state:
-    st.session_state.history = []
 
 st.subheader("Make a guess")
 
